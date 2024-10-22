@@ -3,6 +3,7 @@
 __pycache__/
 *.py[cod]
 docker-compose.yaml
+.env/
 log/
 resources/products.json
 info.txt
