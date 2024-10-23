@@ -14,6 +14,8 @@ def random_date(start, end):
 start_date = datetime.now() - timedelta(days=365)
 end_date = datetime.now()
 
+def probability_value(start, end, probability):
+    return start if random.random() < probability else end
 
 def generate_login_data(client_id):
     login_date = random_date(start_date, end_date)
