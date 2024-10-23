@@ -64,12 +64,9 @@ class Client:
 
     def generate_anomalous_data(self):
         for payment in self.payments:
-            if fun.random.random() < 0.5:
-                payment.amount *= 10000000000
-                payment.transaction_amount *= 100000000000
-        # for _ in self.transactions:
-        #     if fun.random.random() < 0.05:
-        #         _.amount *= 10
+            if fun.random.random() < 0.05:
+                payment.amount *= 10
+                payment.transaction_instance.amount *= 10
 
 
 class Transaction(Activity):
@@ -85,7 +82,7 @@ class Transaction(Activity):
         self.receiver = receiver
         self.transaction_date = fun.random_date(self.activity_date, self.activity_date + fun.timedelta(days=1))
         self.currency = fun.random.choice(['USD', 'RUB'])
-        self.transaction_amount = round(fun.random.uniform(100, 10000), 2) if self.currency == 'USD' \
+        self.amount = round(fun.random.uniform(100, 10000), 2) if self.currency == 'USD' \
             else round(fun.random.uniform(9000, 900000), 2)
         self.transaction_id = fun.random.randint(1000, 10000)
         self.account_number = fun.fake.iban()
@@ -98,13 +95,14 @@ class Transaction(Activity):
             'transaction_type': self.activity_type,
             'account_number': self.account_number,
             'currency': self.currency,
-            'amount': self.transaction_amount
+            'amount': self.amount
         }
 
 
 class Payment(Transaction):
     def __init__(self, transaction_instance):
         super().__init__(transaction_instance)
+        self.transaction_instance = transaction_instance
         self.login_date = transaction_instance.login_date
         self.ip_address = transaction_instance.ip_address
         self.location = transaction_instance.location
@@ -115,7 +113,7 @@ class Payment(Transaction):
         self.receiver = transaction_instance.receiver
         self.transaction_date = transaction_instance.transaction_date
         self.currency = transaction_instance.currency
-        self.amount = transaction_instance.transaction_amount
+        self.amount = transaction_instance.amount
         self.transaction_id = transaction_instance.transaction_id
         self.account_number = transaction_instance.account_number
         self.payment_id = fun.random.randint(1000, 10000)

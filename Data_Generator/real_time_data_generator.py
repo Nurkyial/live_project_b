@@ -1,3 +1,4 @@
+import time
 import project_classes as clas
 import project_gen_functions as fun
 
@@ -8,7 +9,6 @@ max_activities_per_login = 50
 max_normal_logins_per_client = 2
 max_normal_activities_per_login = 10
 sleep_time = 60
-
 
 
 while True:
@@ -39,47 +39,32 @@ while True:
         
         for _ in client.logins:
             data_logins.append(_.login_data_to_dict())
-        
 
-       
         for _ in client.activities:
             data_activities.append(_.activity_data_to_dict())
-        
 
-        
         for _ in client.transactions:
             data_transactions.append(_.transaction_data_to_dict())
         
-
-        
         for _ in client.payments:
             data_payments.append(_.payment_data_to_dict())
-        
-        
-        
+
     timestamp = fun.datetime.now().strftime("%Y%m%d_%H%M%S")
     # dataframe for clients logins
     data_df = fun.pd.DataFrame(data_logins)
-    data_df.to_csv(f'client_logins_{timestamp}.csv', index=False)
+    data_df.to_csv(f'clients_logins_{timestamp}.csv', index=False)
 
     # dataframe for clients activities
     data_df = fun.pd.DataFrame(data_activities)
-    data_df.to_csv(f'client_activities_{timestamp}.csv', index=False)
+    data_df.to_csv(f'clients_activities_{timestamp}.csv', index=False)
 
     # dataframe for clients transactions
     data_df = fun.pd.DataFrame(data_transactions)
-    data_df.to_csv(f'client_transactions_{timestamp}.csv', index=False)
+    data_df.to_csv(f'clients_transactions_{timestamp}.csv', index=False)
 
-    # dataframe for clients pyments
+    # dataframe for clients payments
     data_df = fun.pd.DataFrame(data_payments)
-    data_df.to_csv(f'client_payments_{timestamp}.csv', index=False)
+    data_df.to_csv(f'clients_payments_{timestamp}.csv', index=False)
 
-
-    break
-
-
-
-# for _ in client.payments:
-#     print(_.payment_data_to_dict())
-# for _ in client.transactions:
-#     print(_.transaction_data_to_dict())
+    time.sleep(sleep_time)
+    # break
