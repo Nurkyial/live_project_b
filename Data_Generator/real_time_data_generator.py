@@ -7,7 +7,7 @@ max_logins_per_client = 10
 max_activities_per_login = 50
 
 max_normal_logins_per_client = 2
-max_normal_activities_per_login = 10
+max_normal_activities_per_login = 4
 sleep_time = 60
 
 
@@ -24,9 +24,9 @@ while True:
         logins_per_iteration = fun.probability_value(max_normal_logins_per_client, max_logins_per_client, 0.9)
         for _ in range(fun.random.randint(1, logins_per_iteration)):
             activities_per_login = fun.probability_value(max_normal_activities_per_login, max_activities_per_login, 0.9)
+            client.make_login_and_inheritors(activities_per_login)
             
         client.generate_anomalous_amount()
-        # client.make_login_and_inheritors() пока не понятно какое значение передавать в функцию
         
         for _ in client.logins:
             data_logins.append(_.login_data_to_dict())
@@ -39,7 +39,6 @@ while True:
         
         for _ in client.payments:
             data_payments.append(_.payment_data_to_dict())
-
 
     timestamp = fun.datetime.now().strftime("%Y%m%d_%H%M%S")
 

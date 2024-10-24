@@ -126,7 +126,8 @@ class CallSupport(Activity):
             'duration': self.duration,
             'result': self.result
         }
-    
+
+
 class Client:
     def __init__(self, client_id=None):
         self.client_id = client_id
@@ -155,21 +156,21 @@ class Client:
     def add_call_support(self, call_support):
         self.calls_support.append(call_support)
 
-    def make_login_and_inheritors(self, activities_per_login, call=False):
+    def make_login_and_inheritors(self, max_activities_per_login, call=False):
         login = Login(self.client_id)
         self.add_login(login)
-        for _ in range(fun.random.randint(1, activities_per_login)):
-                activity = Activity(login)
-                self.add_activity(activity)
-                if activity.activity_type in ['transfer_funds', 'pay_bill']:
-                    transaction = Transaction(activity)
-                    payment = Payment(transaction)
-                    self.add_transaction(transaction)
-                    self.add_payment(payment)
-                if call:
-                    if activity.activity_type == 'call_support':
-                        call_support = CallSupport(activity)
-                        self.add_call_support(call_support)
+        for _ in range(fun.random.randint(1, max_activities_per_login)):
+            activity = Activity(login)
+            self.add_activity(activity)
+            if activity.activity_type in ['transfer_funds', 'pay_bill']:
+                transaction = Transaction(activity)
+                payment = Payment(transaction)
+                self.add_transaction(transaction)
+                self.add_payment(payment)
+            if call:
+                if activity.activity_type == 'call_support':
+                    call_support = CallSupport(activity)
+                    self.add_call_support(call_support)
 
     def generate_anomalous_amount(self):
         for payment in self.payments: 
@@ -177,10 +178,10 @@ class Client:
                 payment.amount *= 10
                 payment.transaction_instance.amount *= 10
 
-    def generate_anomalous_logins(self, activities_per_login):
+    def generate_anomalous_logins(self, max_activities_per_login):
         if fun.random.random() < 0.024:
             for _ in range(50):
-                self.make_login_and_inheritors(activities_per_login, call=True)
+                self.make_login_and_inheritors(max_activities_per_login, call=True)
     
     def client_data_to_dict(self):
         return {

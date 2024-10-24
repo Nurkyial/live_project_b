@@ -20,12 +20,10 @@ for client_id in range(1, num_clients + 1):
     client_data.append(client.client_data_to_dict())
 
     for _ in range(num_logins):
-        num_activities = fun.random.randint(1, max_activities_per_login)
-        client.make_login_and_inheritors(num_activities, call=True)
-        client.generate_anomalous_logins(num_activities)
+        client.make_login_and_inheritors(max_activities_per_login, call=True)
 
     client.generate_anomalous_amount()
-    
+    client.generate_anomalous_logins(max_activities_per_login)
 
     for _ in client.logins:
         data_logins.append(_.login_data_to_dict())
