@@ -21,21 +21,11 @@ for client_id in range(1, num_clients + 1):
 
     for _ in range(num_logins):
         num_activities = fun.random.randint(1, max_activities_per_login)
-        login = clas.Login(client_id)
-        client.add_login(login)
-        for _ in range(num_activities):
-            activity = clas.Activity(login)
-            client.add_activity(activity)
-            if activity.activity_type in ['transfer_funds', 'pay_bill']:
-                transaction = clas.Transaction(activity)
-                payment = clas.Payment(transaction)
-                client.add_transaction(transaction)
-                client.add_payment(payment)
-            if activity.activity_type == 'call_support':
-                call_support = clas.CallSupport(activity)
-                client.add_call_support(call_support)
+        client.make_login_and_inheritors(num_activities, call=True)
+        client.generate_anomalous_logins(num_activities)
 
-    client.generate_anomalous_data()
+    client.generate_anomalous_amount()
+    
 
     for _ in client.logins:
         data_logins.append(_.login_data_to_dict())

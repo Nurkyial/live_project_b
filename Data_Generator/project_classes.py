@@ -27,8 +27,9 @@ class Activity(Login):
         self.location = login_instance.location
         self.device = login_instance.device
         self.activity_date = fun.random_date(self.login_date, fun.end_date)
-        self.activity_type = fun.random.choice(['view_account', 'transfer_funds', 'pay_bill', 'call_support',
-                                                'chat_support'])
+        self.activity_type = fun.random.choices(['view_account', 'transfer_funds', 'pay_bill', 'call_support',
+                                                'chat_support'], [7, 3, 3, 1, 2])
+        self.activity_type = ''.join(self.activity_type)
         self.activity_location = fun.fake.uri_path()
 
     def activity_data_to_dict(self):
@@ -39,50 +40,6 @@ class Activity(Login):
             'activity_location': self.activity_location,
             'ip_address': self.ip_address,
             'device': self.device
-        }
-
-
-class Client:
-    def __init__(self, client_id=None):
-        self.client_id = client_id
-        self.name = fun.fake.name()
-        self.client_email = fun.fake.email()
-        self.client_phone = fun.fake.phone_number()
-        self.client_address = fun.fake.address()
-        self.logins = []
-        self.activities = []
-        self.transactions = []
-        self.payments = []
-        self.calls_support = []
-
-    def add_login(self, login):
-        self.logins.append(login)
-
-    def add_activity(self, activity):
-        self.activities.append(activity)
-
-    def add_transaction(self, transaction):
-        self.transactions.append(transaction)
-
-    def add_payment(self, payment):
-        self.payments.append(payment)
-
-    def add_call_support(self, call_support):
-        self.calls_support.append(call_support)
-
-    def generate_anomalous_data(self):
-        for payment in self.payments:
-            if fun.random.random() < 0.05:
-                payment.amount *= 10
-                payment.transaction_instance.amount *= 10
-
-    def client_data_to_dict(self):
-        return {
-            'client_id': self.client_id,
-            'client_name': self.name,
-            'client_email': self.client_email,
-            'client_phone': self.client_phone,
-            'client_address': self.client_address
         }
 
 
@@ -168,4 +125,68 @@ class CallSupport(Activity):
             'call_date': self.activity_date,
             'duration': self.duration,
             'result': self.result
+        }
+    
+class Client:
+    def __init__(self, client_id=None):
+        self.client_id = client_id
+        self.name = fun.fake.name()
+        self.client_email = fun.fake.email()
+        self.client_phone = fun.fake.phone_number()
+        self.client_address = fun.fake.address()
+        self.logins = []
+        self.activities = []
+        self.transactions = []
+        self.payments = []
+        self.calls_support = []
+
+    def add_login(self, login):
+        self.logins.append(login)
+
+    def add_activity(self, activity):
+        self.activities.append(activity)
+
+    def add_transaction(self, transaction):
+        self.transactions.append(transaction)
+
+    def add_payment(self, payment):
+        self.payments.append(payment)
+
+    def add_call_support(self, call_support):
+        self.calls_support.append(call_support)
+
+    def make_login_and_inheritors(self, activities_per_login, call=False):
+        login = Login(self.client_id)
+        self.add_login(login)
+        for _ in range(fun.random.randint(1, activities_per_login)):
+                activity = Activity(login)
+                self.add_activity(activity)
+                if activity.activity_type in ['transfer_funds', 'pay_bill']:
+                    transaction = Transaction(activity)
+                    payment = Payment(transaction)
+                    self.add_transaction(transaction)
+                    self.add_payment(payment)
+                if call:
+                    if activity.activity_type == 'call_support':
+                        call_support = CallSupport(activity)
+                        self.add_call_support(call_support)
+
+    def generate_anomalous_amount(self):
+        for payment in self.payments: 
+            if fun.random.random() < 0.05:
+                payment.amount *= 10
+                payment.transaction_instance.amount *= 10
+
+    def generate_anomalous_logins(self, activities_per_login):
+        if fun.random.random() < 0.024:
+            for _ in range(50):
+                self.make_login_and_inheritors(activities_per_login, call=True)
+    
+    def client_data_to_dict(self):
+        return {
+            'client_id': self.client_id,
+            'client_name': self.name,
+            'client_email': self.client_email,
+            'client_phone': self.client_phone,
+            'client_address': self.client_address
         }

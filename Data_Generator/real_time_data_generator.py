@@ -23,19 +23,10 @@ while True:
         client = clas.Client(client_id)
         logins_per_iteration = fun.probability_value(max_normal_logins_per_client, max_logins_per_client, 0.9)
         for _ in range(fun.random.randint(1, logins_per_iteration)):
-            login = clas.Login(client_id)
-            client.add_login(login)
             activities_per_login = fun.probability_value(max_normal_activities_per_login, max_activities_per_login, 0.9)
-            for _ in range(fun.random.randint(1, activities_per_login)):
-                activity = clas.Activity(login)
-                client.add_activity(activity)
-                if activity.activity_type in ['transfer_funds', 'pay_bill']:
-                    transaction = clas.Transaction(activity)
-                    payment = clas.Payment(transaction)
-                    client.add_transaction(transaction)
-                    client.add_payment(payment)
-        
-        client.generate_anomalous_data()
+            
+        client.generate_anomalous_amount()
+        # client.make_login_and_inheritors() пока не понятно какое значение передавать в функцию
         
         for _ in client.logins:
             data_logins.append(_.login_data_to_dict())
@@ -48,6 +39,7 @@ while True:
         
         for _ in client.payments:
             data_payments.append(_.payment_data_to_dict())
+
 
     timestamp = fun.datetime.now().strftime("%Y%m%d_%H%M%S")
 
