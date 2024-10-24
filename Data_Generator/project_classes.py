@@ -27,7 +27,8 @@ class Activity(Login):
         self.location = login_instance.location
         self.device = login_instance.device
         self.activity_date = fun.random_date(self.login_date, fun.end_date)
-        self.activity_type = fun.random.choice(['view_account', 'transfer_funds', 'pay_bill', 'logout', 'login'])
+        self.activity_type = fun.random.choice(['view_account', 'transfer_funds', 'pay_bill', 'call_support',
+                                                'chat_support'])
         self.activity_location = fun.fake.uri_path()
 
     def activity_data_to_dict(self):
@@ -45,10 +46,14 @@ class Client:
     def __init__(self, client_id=None):
         self.client_id = client_id
         self.name = fun.fake.name()
+        self.client_email = fun.fake.email()
+        self.client_phone = fun.fake.phone_number()
+        self.client_address = fun.fake.address()
         self.logins = []
         self.activities = []
         self.transactions = []
         self.payments = []
+        self.calls_support = []
 
     def add_login(self, login):
         self.logins.append(login)
@@ -62,11 +67,23 @@ class Client:
     def add_payment(self, payment):
         self.payments.append(payment)
 
+    def add_call_support(self, call_support):
+        self.calls_support.append(call_support)
+
     def generate_anomalous_data(self):
         for payment in self.payments:
             if fun.random.random() < 0.05:
                 payment.amount *= 10
                 payment.transaction_instance.amount *= 10
+
+    def client_data_to_dict(self):
+        return {
+            'client_id': self.client_id,
+            'client_name': self.name,
+            'client_email': self.client_email,
+            'client_phone': self.client_phone,
+            'client_address': self.client_address
+        }
 
 
 class Transaction(Activity):
@@ -129,4 +146,26 @@ class Payment(Transaction):
             'amount': self.amount,
             'payment_method': self.payment_method,
             'transaction_id': self.transaction_id
+        }
+
+
+class CallSupport(Activity):
+    def __init__(self, activity_instance):
+        super().__init__(activity_instance)
+        self.login_date = activity_instance.login_date
+        self.ip_address = activity_instance.ip_address
+        self.location = activity_instance.location
+        self.device = activity_instance.device
+        self.activity_date = activity_instance.activity_date
+        self.activity_type = activity_instance.activity_type
+        self.activity_location = activity_instance.activity_location
+        self.duration = fun.random.randint(60, 1800)
+        self.result = fun.random.choice(['resolved', 'unresolved'])
+
+    def call_support_data_to_dict(self):
+        return {
+            'client_id': self.client_id,
+            'call_date': self.activity_date,
+            'duration': self.duration,
+            'result': self.result
         }
