@@ -8,3 +8,4 @@ docker-compose.yaml
 log/
 resources/products.json
 info.txt
+data/

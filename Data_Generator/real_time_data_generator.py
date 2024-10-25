@@ -25,7 +25,7 @@ while True:
         for _ in range(fun.random.randint(1, logins_per_iteration)):
             activities_per_login = fun.probability_value(max_normal_activities_per_login, max_activities_per_login, 0.9)
             client.make_login_and_inheritors(activities_per_login)
-            
+        
         client.generate_anomalous_amount()
         
         for _ in client.logins:
