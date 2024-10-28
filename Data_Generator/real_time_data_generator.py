@@ -4,10 +4,10 @@ import project_gen_functions as fun
 
 max_clients_per_iteration = 10
 max_logins_per_client = 10
-max_activities_per_login = 50
+max_activities_per_login = 20
 
-max_normal_logins_per_client = 2
-max_normal_activities_per_login = 4
+max_normal_logins_per_client = 1
+max_normal_activities_per_login = 2
 sleep_time = 60
 
 

@@ -2,9 +2,9 @@ import project_gen_functions as fun
 import project_classes as clas
 
 
-num_clients = 10000
-max_logins_per_client = 100
-max_activities_per_login = 100
+num_clients = 3000
+max_logins_per_client = 40
+max_activities_per_login = 40
 
 
 for client_id in range(1, num_clients + 1):
