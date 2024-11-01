@@ -58,7 +58,7 @@ class Transaction(Activity):
         self.currency = fun.random.choice(['USD', 'RUB'])
         self.amount = round(fun.random.uniform(100, 10000), 2) if self.currency == 'USD' \
             else round(fun.random.uniform(9000, 900000), 2)
-        self.transaction_id = fun.random.randint(1000, 10000)
+        self.transaction_id = fun.random.randint(1000, 1000000000)
         self.account_number = fun.fake.iban()
 
     def transaction_data_to_dict(self):
@@ -90,7 +90,7 @@ class Payment(Transaction):
         self.amount = transaction_instance.amount
         self.transaction_id = transaction_instance.transaction_id
         self.account_number = transaction_instance.account_number
-        self.payment_id = fun.random.randint(1000, 10000)
+        self.payment_id = fun.random.randint(1000, 1000000000)
         self.payment_date = fun.random_date(self.transaction_date, self.transaction_date + fun.timedelta(days=1))
         self.payment_method = fun.random.choice(['credit_card', 'debit_card', 'bank_transfer', 'e_wallet'])
 

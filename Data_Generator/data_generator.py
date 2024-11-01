@@ -3,8 +3,8 @@ import project_classes as clas
 
 
 num_clients = 3000
-max_logins_per_client = 40
-max_activities_per_login = 40
+max_logins_per_client = 30
+max_activities_per_login = 30
 
 
 for client_id in range(1, num_clients + 1):
