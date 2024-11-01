@@ -15,7 +15,6 @@ This project is an educational application developed for detecting anomalies and
 - python
 - pyspark
 - Faker (for generating random data)
-- Hive
 - Greenplum
 - Kafka
 
