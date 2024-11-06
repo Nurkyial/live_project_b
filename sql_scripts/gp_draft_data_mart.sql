@@ -26,6 +26,7 @@ SELECT
 	COUNT(CASE WHEN calls.is_successful IS TRUE THEN 1 END) AS total_resolved_calls,
 	COUNT(CASE WHEN calls.is_successful IS FALSE THEN 1 END) AS total_unresolved_calls,
 	SUM(calls.duration) AS total_calls_duration,
+	-- payment_method
 	COUNT(CASE WHEN payments.payment_method = 'credit_card' THEN 1 END) AS total_payments_credit_card,
 	SUM(CASE 
 		WHEN payments.payment_method = 'credit_card' AND payments.currency = 'USD' 
@@ -53,7 +54,32 @@ SELECT
 		THEN payments.amount END) AS total_payments_amount_usd_e_wallet,
 	SUM(CASE 
 		WHEN payments.payment_method = 'e_wallet' AND payments.currency = 'RUB' 
-		THEN payments.amount END) AS total_payments_amount_rub_e_wallet
+		THEN payments.amount END) AS total_payments_amount_rub_e_wallet,
+	-- transaction_type
+	COUNT(CASE WHEN transactions.transaction_type = 'transfer_funds' THEN 1 END) AS total_transactions_transfer_funds,
+	SUM(CASE 
+		WHEN transactions.transaction_type = 'transfer_funds' AND transactions.currency = 'USD' 
+		THEN transactions.amount END) AS total_transactions_usd_transfer_funds,
+	SUM(CASE 
+		WHEN transactions.transaction_type = 'transfer_funds' AND transactions.currency = 'RUB' 
+		THEN transactions.amount END) AS total_transactions_rub_transfer_funds,
+	COUNT(CASE WHEN transactions.transaction_type = 'pay_bill' THEN 1 END) AS total_transactions_pay_bill,
+	SUM(CASE 
+		WHEN transactions.transaction_type = 'pay_bill' AND transactions.currency = 'USD' 
+		THEN transactions.amount END) AS total_transactions_usd_pay_bill,
+	SUM(CASE 
+		WHEN transactions.transaction_type = 'pay_bill' AND transactions.currency = 'RUB' 
+		THEN transactions.amount END) AS total_transactions_rub_pay_bill,	
+	-- calls_support.result
+	COUNT(CASE WHEN calls_support.result = 'resolved' THEN 1 END) AS total_resolved_calls,
+	COUNT(CASE WHEN calls_support.result = 'unresolved' THEN 1 END) AS total_unresolved_calls,
+	SUM(CASE 
+		WHEN calls_support.result = 'resolved'
+		THEN calls_support.duration END) AS total_resolved_calls_duration,
+	SUM(CASE 
+		WHEN calls_support.result = 'unresolved'
+		THEN calls_support.duration END) AS total_unresolved_calls_duration
+
 FROM
 	clients
 LEFT JOIN
