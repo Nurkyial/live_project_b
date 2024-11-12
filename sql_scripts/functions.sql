@@ -48,7 +48,7 @@ END;
 $$
  LANGUAGE plpgsql;
 DROP FUNCTION calculate_statistics;
-SELECT calculate_statistics(
+SELECT client_id,  calculate_statistics(
 	'transactions', 
 	'amount',
 	'transaction_type_id',
@@ -56,7 +56,10 @@ SELECT calculate_statistics(
 	'currency_id',
 	1,
 	'MAX',
-	1);
+	client_id)
+FROM transactions
+GROUP BY client_id
+ORDER BY client_id;
 
 SELECT amount FROM transactions
 WHERE transaction_type_id = 1 AND currency_id = 1 AND client_id = 1
