@@ -17,6 +17,8 @@ This project is an educational application developed for detecting anomalies and
 - Faker (for generating random data)
 - Greenplum
 - Kafka
+- Airflow
+- ClickHouse
 
 ### Authors
 
